@@ -1,0 +1,71 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.ns.activitys.TimelineActivity" >
+
+    <Button
+        android:id="@+id/buttonGoToSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="Search" />
+
+    <Button
+        android:id="@+id/buttonOwnProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/buttonGoToSearch"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/buttonGoToSearch"
+        android:text="Own Profile" />
+
+    <Button
+        android:id="@+id/buttonGoToTweet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/buttonGoToSearch"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/buttonOwnProfile"
+        android:text="Tweet" />
+
+    <ListView
+        android:id="@+id/listViewTweets"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_above="@+id/buttonUser"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/buttonGoToSearch" >
+
+    </ListView>
+
+    <Button
+        android:id="@+id/buttonUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/buttonHome"
+        android:layout_alignTop="@+id/buttonHome"
+        android:layout_toRightOf="@+id/buttonHome"
+        android:text="User" />
+
+    <Button
+        android:id="@+id/buttonMention"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/buttonHome"
+        android:layout_alignTop="@+id/buttonHome"
+        android:layout_toRightOf="@+id/buttonUser"
+        android:text="Mention" />
+
+    <Button
+        android:id="@+id/buttonHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:text="Home" />
+
+</RelativeLayout>
