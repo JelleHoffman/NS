@@ -11,7 +11,7 @@ public class Tweet {
 			int favorite_count, int retweet_count, User user) {
 		super();
 		this.id_str = id_str;
-		this.created_at = created_at;
+		this.created_at = created_at.substring(0,11)+ created_at.substring(26, 30);
 		this.text = text;
 		this.favorite_count = favorite_count;
 		this.retweet_count = retweet_count;
@@ -30,23 +30,16 @@ public class Tweet {
 	}
 	
 	public String getCreatedAt(){
-		String created = "";
-//		Scanner in = new Scanner(created_at);
-//		in.useDelimiter(" ");
-//		int counter = 0;
-//		while(in.hasNext()){
-//			if(counter==1||counter==2||counter==5){
-//				created += in.next();
-//			}
-//			counter++;
-//		}
-//		in.close();
-		return created;
+		return created_at;
 	}
 
 	public String getText() {
 		// TODO Auto-generated method stub
 		return text;
+	}
+	
+	public String getIdStr(){
+		return id_str;
 	}
 
 }

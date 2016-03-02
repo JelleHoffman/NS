@@ -7,7 +7,9 @@ import java.util.concurrent.ExecutionException;
 import com.example.ns.model.Model.Timeline;
 import com.example.ns.tasks.GetProfileTask;
 import com.example.ns.tasks.GetTimeLineTask;
+import com.example.ns.tasks.PostRetweetTask;
 import com.example.ns.tasks.PostTweetTask;
+import com.example.ns.tasks.PostUpdateProfile;
 import com.example.ns.tasks.RequestTokenTask;
 import com.example.ns.tasks.SearchTask;
 
@@ -31,6 +33,8 @@ public class Model {
 	
 	private String oAuthToken = "";
 	private String verifier = "";
+	
+	private User currentUser;
 	
 	public enum Timeline{HOME,USER,MENTION}
 	
@@ -116,19 +120,25 @@ public class Model {
 		return null;
 	}
 
-	public String getProfile() {
-		GetProfileTask task = new GetProfileTask(consumer);
-		try {
-			String result = task.execute().get();
-			return result;
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public User getProfile() {
+		if(currentUser==null){
+			GetProfileTask task = new GetProfileTask(consumer);
+			try {
+				User result = task.execute().get();
+				currentUser = result;
+				return result;
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}else{
+			return currentUser;
 		}
-		return null;
+		
 	}
 
 	public ArrayList<Tweet> search(String word) {
@@ -155,6 +165,26 @@ public class Model {
 			e.printStackTrace();
 		} catch (ExecutionException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public String postRetweet(String id_str){
+		PostRetweetTask task = new PostRetweetTask(consumer, id_str);
+		try{
+			return task.execute().get();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public String postUpdatProfile(User user){
+		PostUpdateProfile task = new PostUpdateProfile(consumer, user);
+		try{
+			return task.execute().get();
+		}catch(Exception e){
 			e.printStackTrace();
 		}
 		return null;

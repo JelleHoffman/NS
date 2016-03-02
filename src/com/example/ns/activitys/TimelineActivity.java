@@ -19,74 +19,112 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class TimelineActivity extends Activity {
 	private Model model = Model.getInstance();
 	private ListView listView;
-	private Button home,user,mention,search,profile,tweet;
-	
+	private Button home, user, mention, search, profile, tweet, refresh;
+	private ArrayList<Tweet> timelineHome, timelineMention, timelineUser;
+	private TweetAdapter adapterHome, adapterUser, adapterMention;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_timeline);
-		
-		//finding the items
+
+		// finding the items
 		listView = (ListView) findViewById(R.id.listViewTweets);
 		home = (Button) findViewById(R.id.buttonHome);
 		user = (Button) findViewById(R.id.buttonUser);
 		mention = (Button) findViewById(R.id.buttonMention);
+		refresh = (Button) findViewById(R.id.buttonRefresh);
 		search = (Button) findViewById(R.id.buttonGoToSearch);
 		profile = (Button) findViewById(R.id.buttonOwnProfile);
 		tweet = (Button) findViewById(R.id.buttonGoToTweet);
-		
-		//get the tweets
-		final ArrayList<Tweet> timeline1 = model.getTimeline(Timeline.HOME);
-		
-		//setting a adapter
-		final TweetAdapter adapter1 = new TweetAdapter(getApplicationContext(), R.layout.list_item, timeline1);
-		listView.setAdapter(adapter1);
-		
-		//getting the rest of the tweets
-		final ArrayList<Tweet> timeline2 = model.getTimeline(Timeline.USER);
-		final ArrayList<Tweet> timeline3 = model.getTimeline(Timeline.MENTION);
-		
-		//generating the rest of the adapters
-		final TweetAdapter adapter2 = new TweetAdapter(getApplicationContext(), R.layout.list_item, timeline2);
-		final TweetAdapter adapter3 = new TweetAdapter(getApplicationContext(), R.layout.list_item, timeline3);
-		
-		//setting the buttons
+
+		// get the tweets
+		timelineHome = model.getTimeline(Timeline.HOME);
+
+		// setting a adapter
+		adapterHome = new TweetAdapter(getApplicationContext(),
+				R.layout.list_item, timelineHome);
+		listView.setAdapter(adapterHome);
+
+		// getting the rest of the tweets
+		timelineUser = model.getTimeline(Timeline.USER);
+		timelineMention = model.getTimeline(Timeline.MENTION);
+
+		// generating the rest of the adapters
+		adapterUser = new TweetAdapter(getApplicationContext(),
+				R.layout.list_item, timelineUser);
+		adapterMention = new TweetAdapter(getApplicationContext(),
+				R.layout.list_item, timelineMention);
+
+		// setting the buttons
 		home.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				listView.setAdapter(adapter1);
+				listView.setAdapter(adapterHome);
 			}
 		});
-		
+
 		user.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				listView.setAdapter(adapter2);
+				listView.setAdapter(adapterUser);
 			}
 		});
-		
+
 		mention.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				listView.setAdapter(adapter3);
+				listView.setAdapter(adapterMention);
 			}
 		});
-		
+
+		refresh.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// getting the new tweets
+				timelineHome = model.getTimeline(Timeline.HOME);
+				timelineUser = model.getTimeline(Timeline.USER);
+				timelineMention = model.getTimeline(Timeline.MENTION);
+
+				// setting the adapters
+				adapterHome = new TweetAdapter(getApplicationContext(),
+						R.layout.list_item, timelineHome);
+				adapterUser = new TweetAdapter(getApplicationContext(),
+						R.layout.list_item, timelineUser);
+				adapterMention = new TweetAdapter(getApplicationContext(),
+						R.layout.list_item, timelineMention);
+				Toast.makeText(getApplicationContext(),
+						"Refreshed; please select your timeline",
+						Toast.LENGTH_SHORT).show();
+			}
+		});
+
 		search.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(TimelineActivity.this,SearchActivity.class));
+				startActivity(new Intent(TimelineActivity.this,
+						SearchActivity.class));
 			}
 		});
-		
+
 		tweet.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(TimelineActivity.this,TweetActivity.class));
+				startActivity(new Intent(TimelineActivity.this,
+						TweetActivity.class));
+			}
+		});
+
+		profile.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(TimelineActivity.this,
+						ProfileActivity.class));
 			}
 		});
 	}

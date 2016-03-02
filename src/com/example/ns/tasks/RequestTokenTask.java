@@ -10,7 +10,7 @@ import oauth.signpost.exception.OAuthMessageSignerException;
 import oauth.signpost.exception.OAuthNotAuthorizedException;
 import android.os.AsyncTask;
 
-public class RequestTokenTask extends AsyncTask<String, Void, String> {
+public class RequestTokenTask extends AsyncTask<Void, Void, String> {
 	
 	private OAuthConsumer consumer;
 	private OAuthProvider prodiver;
@@ -22,7 +22,7 @@ public class RequestTokenTask extends AsyncTask<String, Void, String> {
 	}
 	
 	@Override
-	protected String doInBackground(String... params) {
+	protected String doInBackground(Void... params) {
 		String requestUrl = "";
 		try {
 			requestUrl = prodiver.retrieveRequestToken(consumer, Model.getCallBackUrl());

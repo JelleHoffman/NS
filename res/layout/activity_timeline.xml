@@ -44,6 +44,7 @@
 
     <Button
         android:id="@+id/buttonUser"
+        style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/buttonHome"
@@ -53,6 +54,7 @@
 
     <Button
         android:id="@+id/buttonMention"
+        style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/buttonHome"
@@ -62,10 +64,21 @@
 
     <Button
         android:id="@+id/buttonHome"
+        style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:text="Home" />
+
+    <Button
+        android:id="@+id/buttonRefresh"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/buttonHome"
+        android:layout_alignTop="@+id/buttonHome"
+        android:layout_toRightOf="@+id/buttonMention"
+        android:text="Refresh" />
 
 </RelativeLayout>

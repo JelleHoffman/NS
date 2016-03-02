@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutionException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 
 import com.example.ns.R;
+import com.example.ns.model.Model;
 import com.example.ns.model.Tweet;
 import com.example.ns.model.User;
 import com.example.ns.tasks.LoadImageFromUrl;
@@ -17,17 +18,21 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.opengl.Visibility;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class TweetAdapter extends ArrayAdapter<Tweet> {
 	private LayoutInflater inflater;
 	private ArrayList<Tweet> tweets;
+	private Model model = Model.getInstance();
 	
 	public TweetAdapter(Context context, int resource, 
 			List<Tweet> objects) {
@@ -43,7 +48,7 @@ public class TweetAdapter extends ArrayAdapter<Tweet> {
 		if(convertView == null){
 			holder = new TweetViewHolder();
 			convertView = inflater.inflate(R.layout.list_item, null);
-			holder.profileImage = (ImageView) convertView.findViewById(R.id.imageViewProfileImage);
+			holder.profileImage = (ImageView) convertView.findViewById(R.id.imageViewProfileTweet);
 			holder.name=(TextView) convertView.findViewById(R.id.textViewName);
 			holder.screenName=(TextView) convertView.findViewById(R.id.textViewScreenName);
 			holder.createdAt=(TextView) convertView.findViewById(R.id.textViewCreatedAt);
@@ -53,11 +58,14 @@ public class TweetAdapter extends ArrayAdapter<Tweet> {
 			holder = (TweetViewHolder) convertView.getTag();
 		}
 		
+		Button retweet = (Button) convertView.findViewById(R.id.buttonRetweet);
+		
 		//setting the data
-		Tweet tweet = tweets.get(position);
+		final Tweet tweet = tweets.get(position);
 		User user = tweet.getUser();
+		User currentUser = model.getProfile();
 		Log.d("Image url: ",user.getProfileImageUrl());
-		LoadImageFromUrl task = new LoadImageFromUrl(user.getProfileImageUrl());
+		LoadImageFromUrl task = new LoadImageFromUrl(user.getProfileImageUrl(),getContext());
 		try {
 			holder.profileImage.setImageDrawable(task.execute().get());
 		} catch (Exception e) {
@@ -65,8 +73,21 @@ public class TweetAdapter extends ArrayAdapter<Tweet> {
 		} 
 		holder.name.setText(user.getName());
 		holder.screenName.setText("@"+user.getScreenName());
-		holder.createdAt.setText(tweet.getCreatedAt());
+		holder.createdAt.setText(" "+tweet.getCreatedAt());
 		holder.text.setText(tweet.getText());
+		if(!currentUser.getIdstr().equals(user.getIdstr())){
+			retweet.setVisibility(View.VISIBLE);
+		}
+		
+		retweet.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				model.postRetweet(tweet.getIdStr());
+				Toast.makeText(getContext(), "Retweeted", Toast.LENGTH_SHORT).show();
+			}
+		});
+		
 		return convertView;
 		
 	}

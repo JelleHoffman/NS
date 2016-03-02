@@ -25,11 +25,11 @@ public class User {
 	public User(String name, String screen_name, String profile_image,
 			String id_str, String description, String url) {
 		super();
-		this.name = name;
-		this.screen_name = screen_name;
+		this.name = name.trim();
+		this.screen_name = screen_name.trim();
 		this.profile_image = profile_image;
 		this.id_str = id_str;
-		this.description = description;
+		this.description = description.trim();
 		this.url = url;
 	}
 
@@ -39,6 +39,18 @@ public class User {
 
 	public String getScreenName() {
 		return screen_name;
+	}
+
+	public String getIdstr() {
+		return id_str;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public String getUrl() {
+		return url;
 	}
 
 	public String getProfileImageUrl() {
@@ -54,4 +66,15 @@ public class User {
 				+ followers_count + ", Friends: " + friends_count + "}";
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public void setDescription(String description){
+		this.description=description;
+	}
+
+	public void setUrl(String url){
+		this.url=url;
+	}
 }
