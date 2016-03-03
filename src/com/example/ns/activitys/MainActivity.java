@@ -34,6 +34,21 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		String token = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("TOKEN", "");
+		String secret  = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("SECRET", "");
+		String verifier = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("VERIFIER", "");
+		
+		if(!token.isEmpty()&&!secret.isEmpty()&&!verifier.isEmpty()){
+			GetAccesTokenTask task = new GetAccesTokenTask(
+					provider, consumer, verifier);
+			task.execute();
+			consumer.setTokenWithSecret(consumer.getToken(), consumer.getTokenSecret());
+			startActivity(new Intent(MainActivity.this,TimelineActivity.class));
+		}
+		
+		Log.d("Prefence token:",token);
+		Log.d("Prefence secret:",secret);
+		
 		wv = (WebView) findViewById(R.id.wv);
 		wv.loadUrl(model.getRequestUrl());
 
@@ -65,7 +80,11 @@ public class MainActivity extends Activity {
 						//setting the accesstoken
 						consumer.setTokenWithSecret(consumer.getToken(),
 								consumer.getTokenSecret());
-
+						
+						PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("VERIFIER", verifier).commit();
+						PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("TOKEN", consumer.getToken()).commit();
+						PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("SECRET", consumer.getTokenSecret()).commit();
+						
 						// Starting the next activity
 						startActivity(new Intent(MainActivity.this,
 								TimelineActivity.class));

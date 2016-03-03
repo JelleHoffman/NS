@@ -13,6 +13,7 @@ import adapter.TweetAdapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,7 +25,7 @@ import android.widget.Toast;
 public class TimelineActivity extends Activity {
 	private Model model = Model.getInstance();
 	private ListView listView;
-	private Button home, user, mention, search, profile, tweet, refresh;
+	private Button home, user, mention, search, profile, tweet, refresh,logout;
 	private ArrayList<Tweet> timelineHome, timelineMention, timelineUser;
 	private TweetAdapter adapterHome, adapterUser, adapterMention;
 
@@ -32,6 +33,8 @@ public class TimelineActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_timeline);
+		
+		
 
 		// finding the items
 		listView = (ListView) findViewById(R.id.listViewTweets);
@@ -42,6 +45,7 @@ public class TimelineActivity extends Activity {
 		search = (Button) findViewById(R.id.buttonGoToSearch);
 		profile = (Button) findViewById(R.id.buttonOwnProfile);
 		tweet = (Button) findViewById(R.id.buttonGoToTweet);
+		logout = (Button) findViewById(R.id.buttonLogOut);
 
 		// get the tweets
 		timelineHome = model.getTimeline(Timeline.HOME);
@@ -126,6 +130,16 @@ public class TimelineActivity extends Activity {
 				startActivity(new Intent(TimelineActivity.this,
 						ProfileActivity.class));
 			}
+		});
+		
+		logout.setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("TOKEN", "").commit();
+				PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("SECRET", "").commit();
+				startActivity(new Intent(TimelineActivity.this,MainActivity.class));
+			}
+			
 		});
 	}
 

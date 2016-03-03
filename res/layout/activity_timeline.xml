@@ -8,6 +8,7 @@
 
     <Button
         android:id="@+id/buttonGoToSearch"
+        style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -16,6 +17,7 @@
 
     <Button
         android:id="@+id/buttonOwnProfile"
+        style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/buttonGoToSearch"
@@ -25,12 +27,23 @@
 
     <Button
         android:id="@+id/buttonGoToTweet"
+        style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/buttonGoToSearch"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/buttonOwnProfile"
         android:text="Tweet" />
+    
+    <Button
+        android:id="@+id/buttonLogOut"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/buttonGoToSearch"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/buttonGoToTweet"
+        android:text="Log out" />
 
     <ListView
         android:id="@+id/listViewTweets"
@@ -80,5 +93,7 @@
         android:layout_alignTop="@+id/buttonHome"
         android:layout_toRightOf="@+id/buttonMention"
         android:text="Refresh" />
+
+    
 
 </RelativeLayout>
