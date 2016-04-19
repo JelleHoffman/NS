@@ -2,7 +2,6 @@ package com.example.ns.activitys;
 
 import java.util.Observable;
 import java.util.Observer;
-import java.util.concurrent.ExecutionException;
 import org.apache.commons.validator.routines.UrlValidator;
 
 import com.example.ns.R;
