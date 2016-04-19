@@ -10,4 +10,5 @@ public class TweetViewHolder {
 	TextView screenName;
 	TextView createdAt;
 	TextView text;
+	Button retweet;
 }

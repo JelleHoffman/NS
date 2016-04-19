@@ -53,33 +53,31 @@ public class TweetAdapter extends ArrayAdapter<Tweet> {
 			holder.screenName=(TextView) convertView.findViewById(R.id.textViewScreenName);
 			holder.createdAt=(TextView) convertView.findViewById(R.id.textViewCreatedAt);
 			holder.text=(TextView) convertView.findViewById(R.id.textViewText);
+			holder.retweet = (Button) convertView.findViewById(R.id.buttonRetweet);
 			convertView.setTag(holder);
 		}else{
 			holder = (TweetViewHolder) convertView.getTag();
 		}
 		
-		Button retweet = (Button) convertView.findViewById(R.id.buttonRetweet);
+
 		
 		//setting the data
 		final Tweet tweet = tweets.get(position);
 		User user = tweet.getUser();
-		User currentUser = model.getProfile();
 		Log.d("Image url: ",user.getProfileImageUrl());
-		LoadImageFromUrl task = new LoadImageFromUrl(user.getProfileImageUrl(),getContext());
-		try {
-			holder.profileImage.setImageDrawable(task.execute().get());
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+		if(user.getProfileImage() == null){
+			LoadImageFromUrl task = new LoadImageFromUrl(user,getContext());
+			task.execute();
+		}else{
+			holder.profileImage.setImageDrawable(user.getProfileImage());
+		}
+		
+		
 		holder.name.setText(user.getName());
 		holder.screenName.setText("@"+user.getScreenName());
 		holder.createdAt.setText(" "+tweet.getCreatedAt());
 		holder.text.setText(tweet.getText());
-		if(!currentUser.getIdstr().equals(user.getIdstr())){
-			retweet.setVisibility(View.VISIBLE);
-		}
-		
-		retweet.setOnClickListener(new View.OnClickListener() {
+		holder.retweet.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {

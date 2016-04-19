@@ -1,6 +1,10 @@
 package com.example.ns.activitys;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
+
+import org.w3c.dom.ls.LSInput;
 
 import adapter.TweetAdapter;
 import android.app.Activity;
@@ -16,21 +20,27 @@ import com.example.ns.R;
 import com.example.ns.model.Model;
 import com.example.ns.model.Tweet;
 
-public class SearchActivity extends Activity {
+public class SearchActivity extends Activity implements Observer{
 	private ListView listview;
 	private EditText editText;
 	private Button searchButton;
 	private Model model = Model.getInstance();
+	private TweetAdapter adapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
 		
+		model.addObserver(this);
+		
 		//finding views
 		listview = (ListView) findViewById(R.id.listViewSearchResult);
 		editText = (EditText) findViewById(R.id.editTextSearch);
 		searchButton = (Button) findViewById(R.id.buttonSearch);
+		
+		
+		
 		
 		//setting on click
 		searchButton.setOnClickListener(new View.OnClickListener() {
@@ -41,9 +51,7 @@ public class SearchActivity extends Activity {
 				editText.setText("");
 				Log.d("Word:",word+"word end");
 				if(!word.equals("")){
-					ArrayList<Tweet> tweets = model.search(word);
-					TweetAdapter adapter = new TweetAdapter(getApplicationContext(), R.id.list_item, tweets);
-					listview.setAdapter(adapter);
+					model.pullSearch(word);
 				}else{
 					Toast.makeText(getApplicationContext(), "The search text cannot be nothing", Toast.LENGTH_SHORT).show();
 				}
@@ -53,5 +61,14 @@ public class SearchActivity extends Activity {
 		});
 		
 		
+	}
+
+	@Override
+	public void update(Observable observable, Object data) {
+		ArrayList<Tweet> tweets = model.getSearch();
+		if(tweets!=null){
+			adapter = new TweetAdapter(getApplicationContext(), R.id.list_item, tweets);
+			listview.setAdapter(adapter);
+		}
 	}
 }

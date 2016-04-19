@@ -2,7 +2,13 @@ package com.example.ns.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
+
+import adapter.TweetAdapter;
+import android.content.Context;
+import android.util.Log;
 
 import com.example.ns.model.Model.Timeline;
 import com.example.ns.tasks.GetProfileTask;
@@ -18,7 +24,7 @@ import oauth.signpost.OAuthProvider;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthProvider;
 
-public class Model {
+public class Model extends Observable{
 	
 	private static Model instance;
 	
@@ -31,8 +37,9 @@ public class Model {
 	private static String OAUTH_AUTHORIZE_URL = "https://api.twitter.com/oauth/authorize";
 	private static final String OAUTH_CALLBACK_URL = "http://www.saxion.nl/pgrtwitter/authenticated";
 	
-	private String oAuthToken = "";
-	private String verifier = "";
+	private ArrayList<Tweet> home,user,mention,search;
+	
+	private Context context;
 	
 	private User currentUser;
 	
@@ -85,108 +92,120 @@ public class Model {
 		return OAUTH_AUTHORIZE_URL;
 	}
 	
-	public String getoAuthToken() {
-		return oAuthToken;
-	}
-
-	public void setoAuthToken(String oAuthToken) {
-		this.oAuthToken = oAuthToken;
-	}
-
-	public String getVerifier() {
-		return verifier;
-	}
-
-	public void setVerifier(String verifier) {
-		this.verifier = verifier;
-	}
-	
-	public String getConsumerSecret(){
-		return CONSUMER_SECRET;
-	}
-
 	public ArrayList<Tweet> getTimeline(Timeline timeline) {
-		GetTimeLineTask task = new GetTimeLineTask(consumer, timeline);
-		try {
-			ArrayList<Tweet> result = task.execute().get();
-			return result;
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public User getProfile() {
-		if(currentUser==null){
-			GetProfileTask task = new GetProfileTask(consumer);
-			try {
-				User result = task.execute().get();
-				currentUser = result;
-				return result;
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		}else{
-			return currentUser;
+		switch(timeline){
+			case HOME:
+				return home;
+			case USER:
+				return user;
+			case MENTION:
+				return mention;
+			default:
+				return null;
 		}
 		
 	}
-
-	public ArrayList<Tweet> search(String word) {
-		SearchTask task = new SearchTask(word, consumer);
-		try {
-			ArrayList<Tweet> result = task.execute().get();
-			return result;
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+	
+	public void setTimeline(Timeline timeline, ArrayList<Tweet> result) {
+		switch(timeline){
+		case HOME:
+			home = result;
+			break;
+		case USER:
+			user = result;
+			break;
+		case MENTION:
+			mention = result;
+			break;
+		default:
+			Log.d("ERROR","ERROR IN TIMELINE SET");
 	}
-
-	public String postTweet(String status) {
-		PostTweetTask task = new PostTweetTask(consumer, status);
-		try {
-			return task.execute().get();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
 	}
 	
-	public String postRetweet(String id_str){
-		PostRetweetTask task = new PostRetweetTask(consumer, id_str);
-		try{
-			return task.execute().get();
-		}catch(Exception e){
-			e.printStackTrace();
+	public void pullTimeline(Timeline timeline){
+		switch(timeline){
+		case HOME:
+			home = null;
+			break;
+		case USER:
+			user = null;
+			break;
+		case MENTION:
+			mention = null;
+			break;
+		default:
+			Log.d("ERROR","ERROR IN TIMELINE PULL");
 		}
-		return null;
+		GetTimeLineTask task = new GetTimeLineTask(timeline);
+		task.execute();
+	}
+
+	public User getProfile() {
+		return currentUser;
 	}
 	
-	public String postUpdatProfile(User user){
-		PostUpdateProfile task = new PostUpdateProfile(consumer, user);
-		try{
-			return task.execute().get();
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		return null;
+	public void setCurrentUser(User result) {
+		currentUser = result;
 	}
+	
+	public void pullUser() {
+		GetProfileTask task = new GetProfileTask();
+		task.execute();
+	}
+
+	public ArrayList<Tweet> getSearch() {
+		return search;
+	}
+	
+	public void setSearch(ArrayList<Tweet> result){
+		search = result;
+	}
+	
+	public void pullSearch(String word){
+		SearchTask task = new SearchTask(word);
+		task.execute();
+	}
+
+	public void postTweet(String status) {
+		PostTweetTask task = new PostTweetTask(status);
+		task.execute();
+	}
+	
+	public void postRetweet(String id_str){
+		PostRetweetTask task = new PostRetweetTask(id_str);
+		task.execute();
+	}
+	
+	public void postUpdatProfile(User user){
+		PostUpdateProfile task = new PostUpdateProfile(user);
+		task.execute();
+	}
+	
+	public void setConsumer(OAuthConsumer consumer){
+		this.consumer=consumer;
+	}
+
+	public void update() {
+		setChanged();
+		notifyObservers();
+		
+	}
+
+	public void refresh() {
+		pullUser();
+		pullTimeline(Timeline.HOME);
+		pullTimeline(Timeline.USER);
+		pullTimeline(Timeline.MENTION);
+	}
+
+	public Context getContext() {
+		return context;
+	}
+	
+	public void setContext(Context context) {
+		this.context = context;
+	}
+
+
+	
 }

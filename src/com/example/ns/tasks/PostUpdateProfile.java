@@ -10,6 +10,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import com.example.ns.model.Model;
 import com.example.ns.model.User;
 
 import android.net.Uri;
@@ -17,12 +18,11 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 public class PostUpdateProfile extends AsyncTask<Void, Void, String> {
-
-	private OAuthConsumer consumer;
+	private Model model = Model.getInstance();
+	private OAuthConsumer consumer = model.getConsumer();
 	private User user;
 
-	public PostUpdateProfile(OAuthConsumer consumer, User user) {
-		this.consumer = consumer;
+	public PostUpdateProfile(User user) {
 		this.user = user;
 	}
 
@@ -59,5 +59,12 @@ public class PostUpdateProfile extends AsyncTask<Void, Void, String> {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	@Override
+	protected void onPostExecute(String result) {
+		super.onPostExecute(result);
+		model.refresh();
+		model.update();
 	}
 }

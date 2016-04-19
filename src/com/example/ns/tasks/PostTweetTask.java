@@ -9,17 +9,19 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import com.example.ns.model.Model;
+
 import oauth.signpost.OAuthConsumer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
 public class PostTweetTask extends AsyncTask<Void, Void, String> {
-	private OAuthConsumer consumer;
+	private Model model = Model.getInstance();
+	private OAuthConsumer consumer = model.getConsumer();
 	private String status;
 
-	public PostTweetTask(OAuthConsumer consumer, String status) {
-		this.consumer = consumer;
+	public PostTweetTask(String status) {
 		this.status = status;
 	}
 
@@ -53,6 +55,13 @@ public class PostTweetTask extends AsyncTask<Void, Void, String> {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	@Override
+	protected void onPostExecute(String result) {
+		super.onPostExecute(result);
+		model.refresh();
+		model.update();
 	}
 
 }

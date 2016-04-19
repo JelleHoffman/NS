@@ -1,6 +1,7 @@
 package com.example.ns.activitys;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -33,6 +34,7 @@ public class TweetActivity extends Activity {
 				if(!tweetText.equals("")){
 					model.postTweet(tweetText);
 					Toast.makeText(getApplicationContext(), "Tweeted:"+tweetText, Toast.LENGTH_SHORT).show();
+					startActivity(new Intent(TweetActivity.this,TimelineActivity.class));
 				}else{
 					Toast.makeText(getApplicationContext(), "The tweet cannot be nothing", Toast.LENGTH_SHORT).show();
 				}

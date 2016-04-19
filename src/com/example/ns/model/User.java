@@ -1,19 +1,21 @@
 package com.example.ns.model;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 
 public class User {
-	private String name, screen_name, profile_image, id_str, description, url,
+	private String name, screen_name, profile_image_url, id_str, description, url,
 			locatie;
 	private int followers_count, friends_count;
+	private Drawable profileImage;
 
-	public User(String name, String screen_name, String profile_image,
+	public User(String name, String screen_name, String profile_image_url,
 			String id_str, String description, String url, String locatie,
 			int followers_count, int friends_count) {
 		super();
 		this.name = name;
 		this.screen_name = screen_name;
-		this.profile_image = profile_image;
+		this.profile_image_url = profile_image_url;
 		this.id_str = id_str;
 		this.description = description;
 		this.url = url;
@@ -27,7 +29,7 @@ public class User {
 		super();
 		this.name = name.trim();
 		this.screen_name = screen_name.trim();
-		this.profile_image = profile_image;
+		this.profile_image_url = profile_image;
 		this.id_str = id_str;
 		this.description = description.trim();
 		this.url = url;
@@ -54,7 +56,7 @@ public class User {
 	}
 
 	public String getProfileImageUrl() {
-		return profile_image;
+		return profile_image_url;
 	}
 
 
@@ -76,5 +78,13 @@ public class User {
 
 	public void setUrl(String url){
 		this.url=url;
+	}
+	
+	public Drawable getProfileImage(){
+		return profileImage;
+	}
+	
+	public void setProfileImage(Drawable profileImage){
+		this.profileImage = profileImage;
 	}
 }

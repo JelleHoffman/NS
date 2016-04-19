@@ -10,16 +10,18 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import com.example.ns.model.Model;
+
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
 public class PostRetweetTask extends AsyncTask<String, Void, String> {
-	private OAuthConsumer consumer;
+	private Model model = Model.getInstance();
+	private OAuthConsumer consumer = model.getConsumer();
 	private String id_str;
 
-	public PostRetweetTask(OAuthConsumer consumer, String id_str) {
-		this.consumer = consumer;
+	public PostRetweetTask(String id_str) {
 		this.id_str = id_str;
 	}
 

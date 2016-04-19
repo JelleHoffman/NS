@@ -15,6 +15,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.example.ns.R;
+import com.example.ns.model.Model;
 import com.example.ns.model.Model.Timeline;
 import com.example.ns.model.Tweet;
 import com.example.ns.model.User;
@@ -24,16 +26,18 @@ import oauth.signpost.OAuthProvider;
 import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
+import adapter.TweetAdapter;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.text.Spannable;
 import android.util.Log;
 
 public class GetTimeLineTask extends AsyncTask<String, Void, ArrayList<Tweet>> {
-	private OAuthConsumer consumer;
+	private Model model = Model.getInstance();
+	private OAuthConsumer consumer = model.getConsumer();
 	private Timeline timeline;
-
-	public GetTimeLineTask(OAuthConsumer consumer, Timeline timeline) {
-		this.consumer = consumer;
+	
+	public GetTimeLineTask(Timeline timeline) {
 		this.timeline = timeline;
 	}
 
@@ -100,7 +104,8 @@ public class GetTimeLineTask extends AsyncTask<String, Void, ArrayList<Tweet>> {
 				String image_url = u.getString("profile_image_url");
 				//get the bitmap TODO
 				User user = new User(name, screen_name, image_url, id_strU, description,urlU);
-				
+				LoadImageFromUrl t = new LoadImageFromUrl(user,model.getContext());
+				t.execute();
 				//getting the tweet
 				String id_strO = o.getString("id_str");
 				String created_at = o.getString("created_at");
@@ -123,6 +128,13 @@ public class GetTimeLineTask extends AsyncTask<String, Void, ArrayList<Tweet>> {
 		}
 
 		return null;
+	}
+	
+	@Override
+	protected void onPostExecute(ArrayList<Tweet> result) {
+		super.onPostExecute(result);
+		model.setTimeline(timeline,result);
+		model.update();
 	}
 
 }

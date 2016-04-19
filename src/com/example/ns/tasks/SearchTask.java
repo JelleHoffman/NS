@@ -33,12 +33,12 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 public class SearchTask extends AsyncTask<String, Void, ArrayList<Tweet>> {
-	private OAuthConsumer consumer;
 	private String searchArgument;
+	private Model model = Model.getInstance();
+	private OAuthConsumer consumer = model.getConsumer();
 
-	public SearchTask(String searchArgument, OAuthConsumer consumer) {
+	public SearchTask(String searchArgument) {
 		this.searchArgument = searchArgument;
-		this.consumer = consumer;
 	}
 
 	@Override
@@ -104,5 +104,13 @@ public class SearchTask extends AsyncTask<String, Void, ArrayList<Tweet>> {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	@Override
+	protected void onPostExecute(ArrayList<Tweet> result) {
+		super.onPostExecute(result);
+		model.setSearch(result);
+		model.update();
+		
 	}
 }

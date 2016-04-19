@@ -2,6 +2,10 @@ package com.example.ns.activitys;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+
+import oauth.signpost.OAuthConsumer;
 
 import com.example.ns.R;
 import com.example.ns.R.layout;
@@ -22,7 +26,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class TimelineActivity extends Activity {
+public class TimelineActivity extends Activity implements Observer{
 	private Model model = Model.getInstance();
 	private ListView listView;
 	private Button home, user, mention, search, profile, tweet, refresh,logout;
@@ -34,8 +38,8 @@ public class TimelineActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_timeline);
 		
+		model.addObserver(this);
 		
-
 		// finding the items
 		listView = (ListView) findViewById(R.id.listViewTweets);
 		home = (Button) findViewById(R.id.buttonHome);
@@ -46,25 +50,10 @@ public class TimelineActivity extends Activity {
 		profile = (Button) findViewById(R.id.buttonOwnProfile);
 		tweet = (Button) findViewById(R.id.buttonGoToTweet);
 		logout = (Button) findViewById(R.id.buttonLogOut);
-
-		// get the tweets
-		timelineHome = model.getTimeline(Timeline.HOME);
-
-		// setting a adapter
-		adapterHome = new TweetAdapter(getApplicationContext(),
-				R.layout.list_item, timelineHome);
+		
+		adapterHome = new TweetAdapter(getApplicationContext(), R.layout.list_item, new ArrayList<Tweet>());
+		
 		listView.setAdapter(adapterHome);
-
-		// getting the rest of the tweets
-		timelineUser = model.getTimeline(Timeline.USER);
-		timelineMention = model.getTimeline(Timeline.MENTION);
-
-		// generating the rest of the adapters
-		adapterUser = new TweetAdapter(getApplicationContext(),
-				R.layout.list_item, timelineUser);
-		adapterMention = new TweetAdapter(getApplicationContext(),
-				R.layout.list_item, timelineMention);
-
 		// setting the buttons
 		home.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -90,21 +79,7 @@ public class TimelineActivity extends Activity {
 		refresh.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// getting the new tweets
-				timelineHome = model.getTimeline(Timeline.HOME);
-				timelineUser = model.getTimeline(Timeline.USER);
-				timelineMention = model.getTimeline(Timeline.MENTION);
-
-				// setting the adapters
-				adapterHome = new TweetAdapter(getApplicationContext(),
-						R.layout.list_item, timelineHome);
-				adapterUser = new TweetAdapter(getApplicationContext(),
-						R.layout.list_item, timelineUser);
-				adapterMention = new TweetAdapter(getApplicationContext(),
-						R.layout.list_item, timelineMention);
-				Toast.makeText(getApplicationContext(),
-						"Refreshed; please select your timeline",
-						Toast.LENGTH_SHORT).show();
+				model.refresh();
 			}
 		});
 
@@ -141,6 +116,31 @@ public class TimelineActivity extends Activity {
 			}
 			
 		});
+		
+		updateView();
+	}
+	
+	private void updateView(){
+		timelineHome = model.getTimeline(Timeline.HOME);
+		if(timelineHome != null){
+			adapterHome.clear();
+			adapterHome.addAll(timelineHome);
+		}
+		
+		timelineUser = model.getTimeline(Timeline.USER);
+		if(timelineUser != null){
+			adapterUser = new TweetAdapter(getApplicationContext(), R.layout.list_item, timelineUser);
+		}
+		
+		timelineMention = model.getTimeline(Timeline.MENTION);
+		if(timelineMention != null){
+			adapterMention = new TweetAdapter(getApplicationContext(), R.layout.list_item, timelineMention);
+		}
+	}
+
+	@Override
+	public void update(Observable observable, Object data) {
+		updateView();
 	}
 
 }

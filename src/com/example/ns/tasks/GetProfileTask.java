@@ -18,17 +18,15 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
+import com.example.ns.model.Model;
 import com.example.ns.model.User;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
 public class GetProfileTask extends AsyncTask<String, Void, User> {
-	private OAuthConsumer consumer;
-
-	public GetProfileTask(OAuthConsumer consumer) {
-		this.consumer = consumer;
-	}
+	private Model model = Model.getInstance();
+	private OAuthConsumer consumer = model.getConsumer();
 
 	@Override
 	protected User doInBackground(String... params) {
@@ -66,6 +64,8 @@ public class GetProfileTask extends AsyncTask<String, Void, User> {
 					o.getString("description"),
 					o.getString("url")
 					);
+			LoadImageFromUrl task = new LoadImageFromUrl(user, model.getContext());
+			task.execute();
 			
 			return user;
 			
@@ -75,5 +75,12 @@ public class GetProfileTask extends AsyncTask<String, Void, User> {
 		}
 
 		return null;
+	}
+	
+	@Override
+	protected void onPostExecute(User result) {
+		super.onPostExecute(result);
+		model.setCurrentUser(result);
+		model.update();
 	}
 }
