@@ -52,6 +52,8 @@ public class TimelineActivity extends Activity implements Observer{
 		logout = (Button) findViewById(R.id.buttonLogOut);
 		
 		adapterHome = new TweetAdapter(getApplicationContext(), R.layout.list_item, new ArrayList<Tweet>());
+		adapterUser = new TweetAdapter(getApplicationContext(), R.layout.list_item, new ArrayList<Tweet>());
+		adapterMention = new TweetAdapter(getApplicationContext(), R.layout.list_item, new ArrayList<Tweet>());
 		
 		listView.setAdapter(adapterHome);
 		// setting the buttons
@@ -129,12 +131,14 @@ public class TimelineActivity extends Activity implements Observer{
 		
 		timelineUser = model.getTimeline(Timeline.USER);
 		if(timelineUser != null){
-			adapterUser = new TweetAdapter(getApplicationContext(), R.layout.list_item, timelineUser);
+			adapterUser.clear();
+			adapterUser.addAll(timelineUser);
 		}
 		
 		timelineMention = model.getTimeline(Timeline.MENTION);
 		if(timelineMention != null){
-			adapterMention = new TweetAdapter(getApplicationContext(), R.layout.list_item, timelineMention);
+			adapterMention.clear();
+			adapterMention.addAll(timelineMention);
 		}
 	}
 

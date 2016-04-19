@@ -39,7 +39,8 @@ public class SearchActivity extends Activity implements Observer{
 		editText = (EditText) findViewById(R.id.editTextSearch);
 		searchButton = (Button) findViewById(R.id.buttonSearch);
 		
-		
+		adapter = new TweetAdapter(getApplicationContext(), R.layout.list_item, new ArrayList<Tweet>());
+		listview.setAdapter(adapter);
 		
 		
 		//setting on click
@@ -67,8 +68,9 @@ public class SearchActivity extends Activity implements Observer{
 	public void update(Observable observable, Object data) {
 		ArrayList<Tweet> tweets = model.getSearch();
 		if(tweets!=null){
-			adapter = new TweetAdapter(getApplicationContext(), R.id.list_item, tweets);
-			listview.setAdapter(adapter);
+			adapter.clear();
+			adapter.addAll(tweets);
+			
 		}
 	}
 }

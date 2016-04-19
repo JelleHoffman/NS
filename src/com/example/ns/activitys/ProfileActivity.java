@@ -3,6 +3,7 @@ package com.example.ns.activitys;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.ExecutionException;
+import org.apache.commons.validator.routines.UrlValidator;
 
 import com.example.ns.R;
 import com.example.ns.model.Model;
@@ -78,11 +79,6 @@ public class ProfileActivity extends Activity implements Observer {
 				LoadImageFromUrl t = new LoadImageFromUrl(
 						currentUser,getApplicationContext());
 				t.execute();
-//				try {
-//					iv.setImageDrawable(t.execute().get());
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				} 
 			}else{
 				iv.setImageDrawable(currentUser.getProfileImage());
 			}
@@ -96,6 +92,7 @@ public class ProfileActivity extends Activity implements Observer {
 					String name = etName.getText().toString();
 					String description = etDescription.getText().toString();
 					String url = etUrl.getText().toString();
+					UrlValidator urlVal = new UrlValidator();
 					if (name.length() == 0) {
 						Toast.makeText(getApplicationContext(),
 								"Name cannot be empty", Toast.LENGTH_SHORT)
@@ -113,7 +110,11 @@ public class ProfileActivity extends Activity implements Observer {
 						Toast.makeText(getApplicationContext(),
 								"Url cannot be longer then 100 characters",
 								Toast.LENGTH_SHORT).show();
-					} else {
+					} else if(!urlVal.isValid(url)){
+						Toast.makeText(getApplicationContext(),
+								"Url is not valid",
+								Toast.LENGTH_SHORT).show();
+					}	else{
 						User user = currentUser;
 						user.setName(name);
 						user.setDescription(description);

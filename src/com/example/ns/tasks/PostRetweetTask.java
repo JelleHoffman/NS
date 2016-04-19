@@ -56,5 +56,12 @@ public class PostRetweetTask extends AsyncTask<String, Void, String> {
 		}
 		return null;
 	}
+	
+	@Override
+	protected void onPostExecute(String result) {
+		super.onPostExecute(result);
+		model.refresh();
+		model.update();
+	}
 
 }

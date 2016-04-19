@@ -192,6 +192,10 @@ public class Model extends Observable{
 	}
 
 	public void refresh() {
+		currentUser = null;
+		home = null;
+		user = null;
+		mention = null;
 		pullUser();
 		pullTimeline(Timeline.HOME);
 		pullTimeline(Timeline.USER);
