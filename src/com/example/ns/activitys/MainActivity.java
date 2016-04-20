@@ -3,22 +3,17 @@ package com.example.ns.activitys;
 import java.util.concurrent.ExecutionException;
 
 import com.example.ns.R;
-import com.example.ns.R.id;
-import com.example.ns.R.layout;
 import com.example.ns.model.Model;
 import com.example.ns.tasks.GetAccesTokenTask;
 
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
-import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -41,6 +36,7 @@ public class MainActivity extends Activity {
 		String token = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("TOKEN", "");
 		String secret  = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("SECRET", "");
 		
+		//Als er een token is wordt the volgende activity gestart anders gaat die het inlog proces af. 
 		if(!token.isEmpty()&&!secret.isEmpty()){
 			consumer.setTokenWithSecret(token, secret);
 			Log.d("Prefence token:",token);
