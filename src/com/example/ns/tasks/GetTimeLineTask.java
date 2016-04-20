@@ -1,18 +1,14 @@
 package com.example.ns.tasks;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.example.ns.R;
@@ -22,14 +18,7 @@ import com.example.ns.model.Tweet;
 import com.example.ns.model.User;
 
 import oauth.signpost.OAuthConsumer;
-import oauth.signpost.OAuthProvider;
-import oauth.signpost.exception.OAuthCommunicationException;
-import oauth.signpost.exception.OAuthExpectationFailedException;
-import oauth.signpost.exception.OAuthMessageSignerException;
-import adapter.TweetAdapter;
-import android.content.Context;
 import android.os.AsyncTask;
-import android.text.Spannable;
 import android.util.Log;
 
 public class GetTimeLineTask extends AsyncTask<String, Void, ArrayList<Tweet>> {

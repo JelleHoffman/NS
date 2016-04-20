@@ -1,7 +1,5 @@
 package com.example.ns.model;
 
-import java.util.Scanner;
-
 public class Tweet {
 	private String id_str, created_at, text;
 	private int favorite_count, retweet_count;

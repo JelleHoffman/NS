@@ -1,6 +1,5 @@
 package com.example.ns.model;
 
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 public class User {
