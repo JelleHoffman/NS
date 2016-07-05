@@ -7,5 +7,8 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry exported="true" kind="lib" path="/TwitterClient/libs/signpost-commonshttp4-1.2.1.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="/TwitterClient/libs/signpost-core-1.2.1.2.jar"/>
+	<classpathentry kind="src" path="/appcompat_v7"/>
+	<classpathentry exported="true" kind="lib" path="libs/commons-validator-1.5.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/commons-validator-1.5.0-javadoc.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
